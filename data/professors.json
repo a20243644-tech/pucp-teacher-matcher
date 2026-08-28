@@ -1,0 +1,292 @@
+{
+  "professors": [
+    {
+      "id": 1,
+      "name": "Dr. Carlos Mendoza",
+      "course": "Cálculo 1",
+      "department": "Matemáticas",
+      "methodology": {
+        "theory": 80,
+        "practice": 20,
+        "name": "Teórico"
+      },
+      "classRhythm": {
+        "value": "rápido",
+        "score": 8
+      },
+      "evaluationStyle": {
+        "exams": 70,
+        "projects": 10,
+        "presentations": 20,
+        "primary": "exámenes"
+      },
+      "classInteraction": {
+        "value": "baja",
+        "score": 3,
+        "description": "Prefiere que los estudiantes pregunten después de clase"
+      },
+      "workLoad": {
+        "value": "alto",
+        "score": 8,
+        "description": "Tareas semanales y ejercicios frecuentes"
+      },
+      "appliedExamples": {
+        "value": "pocos",
+        "score": 2,
+        "description": "Enfocado en teoría pura"
+      },
+      "averageRating": 3.5,
+      "reviewCount": 28,
+      "classSchedule": "Lunes, Miércoles, Viernes 09:00-10:30",
+      "officeHours": "Martes 14:00-16:00",
+      "allowsAuditing": true,
+      "contactEmail": "cmendoza@pucp.edu.pe",
+      "tags": ["riguroso", "difícil", "teórico", "sin piedad"],
+      "studentReviews": [
+        "Muy difícil pero aprendo mucho",
+        "Necesitas estar atento desde el inicio",
+        "PA1 es brutal si no estudias"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Ing. Patricia López",
+      "course": "Cálculo 1",
+      "department": "Matemáticas",
+      "methodology": {
+        "theory": 50,
+        "practice": 50,
+        "name": "Mixto"
+      },
+      "classRhythm": {
+        "value": "moderado",
+        "score": 5
+      },
+      "evaluationStyle": {
+        "exams": 50,
+        "projects": 30,
+        "presentations": 20,
+        "primary": "mixto"
+      },
+      "classInteraction": {
+        "value": "alta",
+        "score": 8,
+        "description": "Anima preguntas y participa en discusiones"
+      },
+      "workLoad": {
+        "value": "moderado",
+        "score": 5,
+        "description": "Tareas razonables, enfocadas en aplicación"
+      },
+      "appliedExamples": {
+        "value": "muchos",
+        "score": 7,
+        "description": "Siempre relaciona con problemas reales"
+      },
+      "averageRating": 4.2,
+      "reviewCount": 45,
+      "classSchedule": "Martes, Jueves 10:00-11:30",
+      "officeHours": "Miércoles 15:00-17:00",
+      "allowsAuditing": true,
+      "contactEmail": "plopez@pucp.edu.pe",
+      "tags": ["clara", "amable", "práctica", "recomendada"],
+      "studentReviews": [
+        "Explica muy bien, la mejor profesora",
+        "Se nota que le importa que aprendamos",
+        "Buena combinación de teoría y práctica"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Prof. Roberto Flores",
+      "course": "Cálculo 1",
+      "department": "Matemáticas",
+      "methodology": {
+        "theory": 40,
+        "practice": 60,
+        "name": "Práctico"
+      },
+      "classRhythm": {
+        "value": "lento",
+        "score": 3
+      },
+      "evaluationStyle": {
+        "exams": 30,
+        "projects": 50,
+        "presentations": 20,
+        "primary": "proyectos"
+      },
+      "classInteraction": {
+        "value": "muy alta",
+        "score": 9,
+        "description": "Trabajo en grupo, participación constante"
+      },
+      "workLoad": {
+        "value": "moderado",
+        "score": 5,
+        "description": "Enfocado en proyectos colaborativos"
+      },
+      "appliedExamples": {
+        "value": "muchos",
+        "score": 8,
+        "description": "Casos reales de ingeniería y finanzas"
+      },
+      "averageRating": 4.1,
+      "reviewCount": 38,
+      "classSchedule": "Lunes, Miércoles 14:00-15:30",
+      "officeHours": "Jueves 10:00-12:00",
+      "allowsAuditing": true,
+      "contactEmail": "rflores@pucp.edu.pe",
+      "tags": ["práctico", "colaborativo", "ingeniero", "entretenido"],
+      "studentReviews": [
+        "Ideal si aprendes haciendo",
+        "Menos énfasis en exámenes, mejor para mí",
+        "Proyectos interesantes pero requieren tiempo"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Dra. María Rodríguez",
+      "course": "Introducción a la Programación",
+      "department": "Informática",
+      "methodology": {
+        "theory": 30,
+        "practice": 70,
+        "name": "Práctico"
+      },
+      "classRhythm": {
+        "value": "moderado",
+        "score": 5
+      },
+      "evaluationStyle": {
+        "exams": 20,
+        "projects": 70,
+        "presentations": 10,
+        "primary": "proyectos"
+      },
+      "classInteraction": {
+        "value": "alta",
+        "score": 7,
+        "description": "Resuelve dudas en tiempo real mientras codean"
+      },
+      "workLoad": {
+        "value": "moderado",
+        "score": 5,
+        "description": "Laboratorios semanales, proyectos integradores"
+      },
+      "appliedExamples": {
+        "value": "muchos",
+        "score": 9,
+        "description": "Todo en contexto: apps reales, problemas actuales"
+      },
+      "averageRating": 4.3,
+      "reviewCount": 52,
+      "classSchedule": "Martes, Jueves 09:00-10:30 + Viernes 09:00-11:00 (lab)",
+      "officeHours": "Lunes 14:00-16:00",
+      "allowsAuditing": true,
+      "contactEmail": "mrodriguez@pucp.edu.pe",
+      "tags": ["hands-on", "mentora", "responsiva", "excelente"],
+      "studentReviews": [
+        "La mejor para aprender a programar en serio",
+        "Te guía sin hacer el trabajo por ti",
+        "Ambiente de laboratorio muy productivo"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Ing. Andrés Gutiérrez",
+      "course": "Introducción a la Programación",
+      "department": "Informática",
+      "methodology": {
+        "theory": 70,
+        "practice": 30,
+        "name": "Teórico"
+      },
+      "classRhythm": {
+        "value": "rápido",
+        "score": 8
+      },
+      "evaluationStyle": {
+        "exams": 80,
+        "projects": 10,
+        "presentations": 10,
+        "primary": "exámenes"
+      },
+      "classInteraction": {
+        "value": "baja",
+        "score": 2,
+        "description": "Monólogo en clase, consultas por email"
+      },
+      "workLoad": {
+        "value": "alto",
+        "score": 8,
+        "description": "Problemas complejos desde la semana 1"
+      },
+      "appliedExamples": {
+        "value": "pocos",
+        "score": 3,
+        "description": "Énfasis en algoritmos abstractos"
+      },
+      "averageRating": 3.2,
+      "reviewCount": 31,
+      "classSchedule": "Lunes, Miércoles 10:00-11:30",
+      "officeHours": "Viernes 15:00-16:00",
+      "allowsAuditing": true,
+      "contactEmail": "agutierrez@pucp.edu.pe",
+      "tags": ["difícil", "teórico", "abstracto", "cs puro"],
+      "studentReviews": [
+        "Si eres bueno en matemática vas bien",
+        "PA1 desaprueba a la mitad",
+        "Pero si pasas, aprendes algoritmia de verdad"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "JP Fernando Soto",
+      "course": "Introducción a la Programación",
+      "department": "Informática",
+      "methodology": {
+        "theory": 50,
+        "practice": 50,
+        "name": "Mixto"
+      },
+      "classRhythm": {
+        "value": "lento",
+        "score": 4
+      },
+      "evaluationStyle": {
+        "exams": 40,
+        "projects": 40,
+        "presentations": 20,
+        "primary": "mixto"
+      },
+      "classInteraction": {
+        "value": "muy alta",
+        "score": 9,
+        "description": "Grupos pequeños, retroalimentación detallada"
+      },
+      "workLoad": {
+        "value": "bajo",
+        "score": 3,
+        "description": "Menos tareas, más enfoque en comprensión"
+      },
+      "appliedExamples": {
+        "value": "muchos",
+        "score": 8,
+        "description": "Ejemplos progresivos, paso a paso"
+      },
+      "averageRating": 4.5,
+      "reviewCount": 67,
+      "classSchedule": "Miércoles, Viernes 14:00-15:30",
+      "officeHours": "Martes 15:00-17:00, Jueves 10:00-12:00",
+      "allowsAuditing": true,
+      "contactEmail": "fsoto@pucp.edu.pe",
+      "tags": ["jp paciente", "novatos", "amigable", "top rated"],
+      "studentReviews": [
+        "Perfecto para quien nunca programó",
+        "Te enseña de verdad, no solo teoría",
+        "Mejor JP que he tenido"
+      ]
+    }
+  ]
+}
