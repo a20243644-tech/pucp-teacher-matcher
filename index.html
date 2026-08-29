@@ -1,13 +1,1066 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PUCP Teacher Matcher - Encuentra tu profesor ideal</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PUCP Teacher Matcher - Encuentra tu Profesor Ideal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #48bb78;
+            --danger: #f56565;
+            --warning: #ed8936;
+            --light: #f7fafc;
+            --dark: #2d3748;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* HEADER */
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* MAIN LAYOUT */
+        .main-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* LEFT PANEL - STUDENT PROFILE & SEARCH */
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .slider-group {
+            margin-bottom: 20px;
+        }
+
+        .slider-group label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .slider-group input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 3px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider-group input[type="range"]::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 3px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .student-profile {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        .student-profile h2 {
+            color: white;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 15px;
+        }
+
+        .profile-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            font-size: 0.95rem;
+        }
+
+        .profile-item strong {
+            opacity: 0.8;
+        }
+
+        /* RIGHT PANEL - RESULTS */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(102, 126, 234, 0.3);
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .loading-subtext {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .match-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .match-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .match-header-left {
+            flex: 1;
+        }
+
+        .match-header-left h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .match-header-left p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .match-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.2);
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .match-content {
+            padding: 20px;
+        }
+
+        .match-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .match-section:last-child {
+            border-bottom: none;
+        }
+
+        .match-section h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .info-item .label {
+            font-size: 0.8rem;
+            color: #999;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            color: var(--dark);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .reviews {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .review-item {
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            font-style: italic;
+            color: #555;
+        }
+
+        .review-item::before {
+            content: '"';
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .review-item::after {
+            content: '"';
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* MAP SECTION */
+        .map-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .map-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #map {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .classroom-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .classroom-info h4 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .classroom-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .classroom-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .classroom-card strong {
+            color: var(--primary);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .classroom-card small {
+            color: #666;
+            display: block;
+            font-size: 0.85rem;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #c62828;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #2e7d32;
+            margin-bottom: 20px;
+        }
+
+        .methodology-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            gap: 2px;
+            margin-top: 8px;
+        }
+
+        .theory-bar {
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 4px;
+        }
+
+        .practice-bar {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 4px;
+        }
+
+        .animation-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <h1><i class="fas fa-graduation-cap"></i> PUCP Teacher Matcher</h1>
+            <p>🎓 Encuentra el profesor perfecto según tu estilo de aprendizaje 🎯</p>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-wrapper">
+            <!-- LEFT PANEL -->
+            <div class="left-panel">
+                <!-- STUDENT PROFILE -->
+                <div class="card student-profile">
+                    <h2><i class="fas fa-user-circle"></i> Tu Perfil</h2>
+                    <div id="profileDisplay"></div>
+                </div>
+
+                <!-- QUESTIONNAIRE -->
+                <div class="card">
+                    <h2><i class="fas fa-clipboard-list"></i> Tu Estilo de Aprendizaje</h2>
+                    
+                    <div class="form-group">
+                        <label>Nombre <span style="color: var(--danger);">*</span></label>
+                        <input type="text" id="studentName" placeholder="Tu nombre completo">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Curso <span style="color: var(--danger);">*</span></label>
+                        <select id="studentCourse">
+                            <option value="">Selecciona un curso</option>
+                            <option value="Cálculo 1">Cálculo 1</option>
+                            <option value="Introducción a la Programación">Introducción a la Programación</option>
+                            <option value="Física 1">Física 1</option>
+                            <option value="Química 1">Química 1</option>
+                        </select>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>
+                            <span>¿Cómo aprendes mejor?</span>
+                            <span id="methodology-value">5</span>
+                        </label>
+                        <input type="range" id="methodology" min="1" max="10" value="5">
+                        <small style="color: #999; display: block; margin-top: 5px;">1 = Pura teoría | 10 = Pura práctica</small>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>
+                            <span>¿Qué ritmo de clase prefieres?</span>
+                            <span id="rhythm-value">5</span>
+                        </label>
+                        <input type="range" id="rhythm" min="1" max="10" value="5">
+                        <small style="color: #999; display: block; margin-top: 5px;">1 = Lento | 10 = Rápido</small>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>
+                            <span>¿Te gusta participar en clase?</span>
+                            <span id="interaction-value">5</span>
+                        </label>
+                        <input type="range" id="interaction" min="1" max="10" value="5">
+                        <small style="color: #999; display: block; margin-top: 5px;">1 = Prefiero escuchar | 10 = Me encanta participar</small>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>
+                            <span>¿Cuál es tu tolerancia a tareas?</span>
+                            <span id="workload-value">5</span>
+                        </label>
+                        <input type="range" id="workload" min="1" max="10" value="5">
+                        <small style="color: #999; display: block; margin-top: 5px;">1 = Pocas tareas | 10 = Muchas tareas</small>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>
+                            <span>¿Qué tipo de ejemplos te funcionan?</span>
+                            <span id="examples-value">5</span>
+                        </label>
+                        <input type="range" id="examples" min="1" max="10" value="5">
+                        <small style="color: #999; display: block; margin-top: 5px;">1 = Teóricos | 10 = Aplicados/Real</small>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="analyzeMatch()" id="analyzeBtn">
+                        <i class="fas fa-search"></i> <span id="btnText">Analizar Mi Match</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL -->
+            <div class="right-panel">
+                <div class="card" id="resultsContainer">
+                    <div class="loading-state">
+                        <i class="fas fa-sparkles" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <p style="color: #999; font-size: 1rem;">Completa tu perfil y presiona "Analizar Mi Match" para ver resultados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAP SECTION -->
+        <div class="map-section">
+            <h2><i class="fas fa-map-location-dot"></i> Ubicación de Salones y Profesores</h2>
+            <div id="map"></div>
+            <div class="classroom-info" id="classroomInfo" style="display: none;">
+                <h4>📍 Salones de Clase</h4>
+                <div class="classroom-list" id="classroomList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <p>💡 PUCP Teacher Matcher - Encuentra tu profesor ideal | Datos almacenados localmente en tu navegador</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // Base de datos de profesores mejorada con información de salones
+        const professorsData = {
+            "Cálculo 1": [
+                {
+                    id: 1,
+                    name: "Dr. Carlos Mendoza",
+                    methodology: { theory: 80, practice: 20, name: "Teórico" },
+                    classRhythm: 8,
+                    interaction: 3,
+                    workLoad: 8,
+                    examples: 2,
+                    rating: 3.5,
+                    reviewCount: 28,
+                    classSchedule: "Lunes, Miércoles, Viernes 09:00-10:30",
+                    officeHours: "Martes 14:00-16:00",
+                    contactEmail: "cmendoza@pucp.edu.pe",
+                    tags: ["riguroso", "difícil", "teórico", "sin piedad"],
+                    reviews: [
+                        "Muy difícil pero aprendo mucho",
+                        "Necesitas estar atento desde el inicio",
+                        "PA1 es brutal si no estudias"
+                    ],
+                    classrooms: [
+                        { name: "Aula 401", building: "Pabellón A", lat: -12.0473, lng: -77.0828, times: "LMW 09:00-10:30" },
+                        { name: "Lab Informática 105", building: "Pabellón B", lat: -12.0475, lng: -77.0825, times: "Consultas" }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: "Ing. Patricia López",
+                    methodology: { theory: 50, practice: 50, name: "Mixto" },
+                    classRhythm: 5,
+                    interaction: 8,
+                    workLoad: 5,
+                    examples: 7,
+                    rating: 4.2,
+                    reviewCount: 45,
+                    classSchedule: "Martes, Jueves 10:00-11:30",
+                    officeHours: "Miércoles 15:00-17:00",
+                    contactEmail: "plopez@pucp.edu.pe",
+                    tags: ["clara", "amable", "práctica", "recomendada"],
+                    reviews: [
+                        "Explica muy bien, la mejor profesora",
+                        "Se nota que le importa que aprendamos",
+                        "Buena combinación de teoría y práctica"
+                    ],
+                    classrooms: [
+                        { name: "Aula 301", building: "Pabellón C", lat: -12.0471, lng: -77.0830, times: "JM 10:00-11:30" },
+                        { name: "Sala Docentes 210", building: "Pabellón C", lat: -12.0470, lng: -77.0832, times: "Asesorías" }
+                    ]
+                },
+                {
+                    id: 3,
+                    name: "Prof. Roberto Flores",
+                    methodology: { theory: 40, practice: 60, name: "Práctico" },
+                    classRhythm: 3,
+                    interaction: 9,
+                    workLoad: 5,
+                    examples: 8,
+                    rating: 4.1,
+                    reviewCount: 38,
+                    classSchedule: "Lunes, Miércoles 14:00-15:30",
+                    officeHours: "Jueves 10:00-12:00",
+                    contactEmail: "rflores@pucp.edu.pe",
+                    tags: ["práctico", "colaborativo", "ingeniero", "entretenido"],
+                    reviews: [
+                        "Ideal si aprendes haciendo",
+                        "Menos énfasis en exámenes, mejor para mí",
+                        "Proyectos interesantes pero requieren tiempo"
+                    ],
+                    classrooms: [
+                        { name: "Taller A-1", building: "Pabellón D", lat: -12.0476, lng: -77.0827, times: "LM 14:00-15:30" },
+                        { name: "Salón Proyectos 105", building: "Pabellón D", lat: -12.0478, lng: -77.0829, times: "Trabajos grupales" }
+                    ]
+                }
+            ],
+            "Introducción a la Programación": [
+                {
+                    id: 4,
+                    name: "Dra. María Rodríguez",
+                    methodology: { theory: 30, practice: 70, name: "Práctico" },
+                    classRhythm: 5,
+                    interaction: 7,
+                    workLoad: 5,
+                    examples: 9,
+                    rating: 4.3,
+                    reviewCount: 52,
+                    classSchedule: "Martes, Jueves 09:00-10:30 + Viernes 09:00-11:00 (lab)",
+                    officeHours: "Lunes 14:00-16:00",
+                    contactEmail: "mrodriguez@pucp.edu.pe",
+                    tags: ["hands-on", "mentora", "responsiva", "excelente"],
+                    reviews: [
+                        "La mejor para aprender a programar en serio",
+                        "Te guía sin hacer el trabajo por ti",
+                        "Ambiente de laboratorio muy productivo"
+                    ],
+                    classrooms: [
+                        { name: "Lab Programación 201", building: "Pabellón E", lat: -12.0479, lng: -77.0826, times: "MJ 09:00-10:30" },
+                        { name: "Lab Programación 202", building: "Pabellón E", lat: -12.0481, lng: -77.0828, times: "Viernes 09:00-11:00" }
+                    ]
+                },
+                {
+                    id: 5,
+                    name: "Ing. Andrés Gutiérrez",
+                    methodology: { theory: 70, practice: 30, name: "Teórico" },
+                    classRhythm: 8,
+                    interaction: 2,
+                    workLoad: 8,
+                    examples: 3,
+                    rating: 3.2,
+                    reviewCount: 31,
+                    classSchedule: "Lunes, Miércoles 10:00-11:30",
+                    officeHours: "Viernes 15:00-16:00",
+                    contactEmail: "agutierrez@pucp.edu.pe",
+                    tags: ["difícil", "teórico", "abstracto", "cs puro"],
+                    reviews: [
+                        "Si eres bueno en matemática vas bien",
+                        "PA1 desaprueba a la mitad",
+                        "Pero si pasas, aprendes algoritmia de verdad"
+                    ],
+                    classrooms: [
+                        { name: "Aula 501", building: "Pabellón F", lat: -12.0472, lng: -77.0831, times: "LM 10:00-11:30" }
+                    ]
+                },
+                {
+                    id: 6,
+                    name: "JP Fernando Soto",
+                    methodology: { theory: 50, practice: 50, name: "Mixto" },
+                    classRhythm: 4,
+                    interaction: 9,
+                    workLoad: 3,
+                    examples: 8,
+                    rating: 4.5,
+                    reviewCount: 67,
+                    classSchedule: "Miércoles, Viernes 14:00-15:30",
+                    officeHours: "Martes 15:00-17:00, Jueves 10:00-12:00",
+                    contactEmail: "fsoto@pucp.edu.pe",
+                    tags: ["jp paciente", "novatos", "amigable", "top rated"],
+                    reviews: [
+                        "Perfecto para quien nunca programó",
+                        "Te enseña de verdad, no solo teoría",
+                        "Mejor JP que he tenido"
+                    ],
+                    classrooms: [
+                        { name: "Sala Tutorial 101", building: "Pabellón C", lat: -12.0473, lng: -77.0833, times: "MJ 14:00-15:30" },
+                        { name: "Oficina JP 305", building: "Pabellón C", lat: -12.0471, lng: -77.0834, times: "Asesorías programadas" }
+                    ]
+                }
+            ]
+        };
+
+        // Slider listeners
+        ['methodology', 'rhythm', 'interaction', 'workload', 'examples'].forEach(id => {
+            document.getElementById(id).addEventListener('input', (e) => {
+                document.getElementById(`${id}-value`).textContent = e.target.value;
+            });
+        });
+
+        // Calculate compatibility score
+        function calculateScore(student, professor) {
+            const methodologyDiff = Math.abs(student.methodology - ((professor.methodology.practice / 100) * 9 + 1));
+            const rhythmDiff = Math.abs(student.rhythm - professor.classRhythm);
+            const interactionDiff = Math.abs(student.interaction - professor.interaction);
+            const workloadDiff = Math.abs(student.workload - professor.workLoad);
+            const examplesDiff = Math.abs(student.examples - professor.examples);
+
+            const avgDiff = (methodologyDiff + rhythmDiff + interactionDiff + workloadDiff + examplesDiff) / 5;
+            return Math.round((1 - avgDiff / 10) * 100);
+        }
+
+        function analyzeMatch() {
+            const name = document.getElementById('studentName').value.trim();
+            const course = document.getElementById('studentCourse').value;
+
+            if (!name || !course) {
+                alert('⚠️ Por favor completa tu nombre y selecciona un curso');
+                return;
+            }
+
+            const student = {
+                name,
+                course,
+                methodology: parseInt(document.getElementById('methodology').value),
+                rhythm: parseInt(document.getElementById('rhythm').value),
+                interaction: parseInt(document.getElementById('interaction').value),
+                workload: parseInt(document.getElementById('workload').value),
+                examples: parseInt(document.getElementById('examples').value)
+            };
+
+            // Update profile
+            updateProfile(student);
+
+            // Show loading state
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = `
+                <div class="loading-state animation-pulse">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Analizando tu Match</div>
+                    <div class="loading-subtext">Comparando tu estilo con los profesores de ${course}...</div>
+                </div>
+            `;
+
+            // Simulate processing time
+            setTimeout(() => {
+                displayResults(student);
+            }, 2500);
+        }
+
+        function updateProfile(student) {
+            const profileDisplay = document.getElementById('profileDisplay');
+            profileDisplay.innerHTML = `
+                <div class="profile-item">
+                    <strong>👤 Nombre:</strong>
+                    <span>${student.name}</span>
+                </div>
+                <div class="profile-item">
+                    <strong>📚 Curso:</strong>
+                    <span>${student.course}</span>
+                </div>
+                <div class="profile-item">
+                    <strong>🎓 Ciclo:</strong>
+                    <span>1er ciclo (Cachimbo)</span>
+                </div>
+                <div class="profile-item">
+                    <strong>⏰ Estado:</strong>
+                    <span>✅ Perfil Completo</span>
+                </div>
+            `;
+        }
+
+        function displayResults(student) {
+            const professors = professorsData[student.course] || [];
+            const matches = professors.map(prof => ({
+                ...prof,
+                score: calculateScore(student, prof)
+            })).sort((a, b) => b.score - a.score);
+
+            if (matches.length === 0) {
+                document.getElementById('resultsContainer').innerHTML = `
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i> No hay profesores disponibles para este curso.
+                    </div>
+                `;
+                return;
+            }
+
+            let resultsHTML = `
+                <div class="success-message">
+                    <i class="fas fa-check-circle"></i> ¡Se encontraron ${matches.length} opciones de profesores!
+                </div>
+            `;
+
+            matches.forEach((match, index) => {
+                const scoreColor = match.score >= 85 ? '#4CAF50' : match.score >= 70 ? '#FF9800' : '#2196F3';
+                const scoreText = match.score >= 85 ? '¡Excelente!' : match.score >= 70 ? 'Muy bueno' : 'Compatible';
+
+                resultsHTML += `
+                    <div class="match-card" style="margin-top: ${index === 0 ? '0' : '20px'}; border-top: 3px solid ${scoreColor};">
+                        <div class="match-header">
+                            <div class="match-header-left">
+                                <h3><i class="fas fa-user-tie"></i> ${match.name}</h3>
+                                <p>👨‍🏫 Profesor/JP | ⭐ ${match.rating}/5.0 (${match.reviewCount} opiniones)</p>
+                            </div>
+                            <div class="match-score" style="color: ${scoreColor};">
+                                ${match.score}%
+                                <span style="font-size: 0.6rem; position: absolute; bottom: 5px; right: 5px;">${scoreText}</span>
+                            </div>
+                        </div>
+
+                        <div class="match-content">
+                            <!-- Metodología -->
+                            <div class="match-section">
+                                <h4><i class="fas fa-book"></i> Metodología</h4>
+                                <p style="margin-bottom: 10px; color: #666;">${match.methodology.name}</p>
+                                <div class="methodology-bar">
+                                    <div class="theory-bar" style="flex: ${match.methodology.theory};"></div>
+                                    <div class="practice-bar" style="flex: ${match.methodology.practice};"></div>
+                                </div>
+                                <small style="color: #999; display: block; margin-top: 8px;">
+                                    ${match.methodology.theory}% Teoría | ${match.methodology.practice}% Práctica
+                                </small>
+                            </div>
+
+                            <!-- Horarios y Ubicación -->
+                            <div class="match-section">
+                                <h4><i class="fas fa-clock"></i> Horarios y Ubicación</h4>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="label">📖 Clase</div>
+                                        <div class="value">${match.classSchedule}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">💬 Asesorías</div>
+                                        <div class="value">${match.officeHours}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">📍 Salones</div>
+                                        <div class="value">${match.classrooms.map(c => c.name).join(', ')}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">📧 Contacto</div>
+                                        <div class="value"><a href="mailto:${match.contactEmail}" style="color: var(--primary); text-decoration: none;">${match.contactEmail}</a></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Estilos Pedagógicos -->
+                            <div class="match-section">
+                                <h4><i class="fas fa-chart-bar"></i> Estilos Pedagógicos</h4>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="label">⚡ Ritmo</div>
+                                        <div class="value">${match.classRhythm}/10 ${match.classRhythm >= 7 ? '(Rápido)' : match.classRhythm >= 4 ? '(Moderado)' : '(Lento)'}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">💬 Interacción</div>
+                                        <div class="value">${match.interaction}/10 ${match.interaction >= 7 ? '(Participativa)' : match.interaction >= 4 ? '(Moderada)' : '(Formal)'}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">📚 Carga</div>
+                                        <div class="value">${match.workLoad}/10 ${match.workLoad >= 7 ? '(Alta)' : match.workLoad >= 4 ? '(Moderada)' : '(Baja)'}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">🌍 Ejemplos</div>
+                                        <div class="value">${match.examples}/10 ${match.examples >= 7 ? '(Aplicados)' : match.examples >= 4 ? '(Mixtos)' : '(Teóricos)'}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reseñas -->
+                            <div class="match-section">
+                                <h4><i class="fas fa-comments"></i> Opiniones de Estudiantes</h4>
+                                <div class="reviews">
+                                    ${match.reviews.map(review => `<div class="review-item">${review}</div>`).join('')}
+                                </div>
+                            </div>
+
+                            <!-- Tags -->
+                            <div class="match-section">
+                                <h4><i class="fas fa-tags"></i> Características</h4>
+                                <div class="tags">
+                                    ${match.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('resultsContainer').innerHTML = resultsHTML;
+
+            // Update map with classrooms
+            updateMap(matches[0].classrooms);
+        }
+
+        // Initialize map
+        let map;
+        function initMap() {
+            map = L.map('map').setView([-12.0474, -77.0829], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        function updateMap(classrooms) {
+            if (!map) return;
+
+            // Clear existing markers
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            // Add new markers
+            classrooms.forEach(classroom => {
+                const marker = L.marker([classroom.lat, classroom.lng]).addTo(map)
+                    .bindPopup(`
+                        <strong>${classroom.name}</strong><br>
+                        ${classroom.building}<br>
+                        ⏰ ${classroom.times}
+                    `);
+            });
+
+            // Fit bounds
+            if (classrooms.length > 0) {
+                const bounds = classrooms.map(c => [c.lat, c.lng]);
+                map.fitBounds(bounds, { padding: [50, 50] });
+            }
+
+            // Display classroom info
+            const classroomInfo = document.getElementById('classroomInfo');
+            const classroomList = document.getElementById('classroomList');
+            
+            classroomList.innerHTML = classrooms.map(c => `
+                <div class="classroom-card">
+                    <strong>📍 ${c.name}</strong>
+                    <small>${c.building}</small>
+                    <small>⏰ ${c.times}</small>
+                </div>
+            `).join('');
+
+            classroomInfo.style.display = 'block';
+        }
+
+        // Initialize map on load
+        window.addEventListener('load', initMap);
+    </script>
+</body>
 </html>
